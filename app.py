@@ -43,6 +43,7 @@ def home():
         # If the file is allowed and has an allowed extension
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
+            os.makedirs('static', exist_ok=True)
             filepath = os.path.join('static', filename)
             file.save(filepath)
 
