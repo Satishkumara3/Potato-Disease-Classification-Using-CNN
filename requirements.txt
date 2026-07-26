@@ -1,5 +1,5 @@
 Flask
-tensorflow-cpu
+tflite-runtime
 numpy
 Werkzeug
 gunicorn
