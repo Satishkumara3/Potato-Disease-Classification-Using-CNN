@@ -1,0 +1,225 @@
+﻿python : WARNING: All log 
+messages before 
+absl::InitializeLog() is 
+called are written to STDERR
+At line:1 char:1
++ python app.py > error.log 
+2>&1
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~
+    + CategoryInfo           
+   : NotSpecified: (WARNING  
+  : All lo...itten to STDE   
+ RR:String) [], RemoteExc    
+eption
+    + FullyQualifiedErrorId  
+   : NativeCommandError
+ 
+I0000 
+00:00:1785060672.936660   
+12068 port.cc:153] oneDNN 
+custom operations are on. 
+You may see slightly 
+different numerical results 
+due to floating-point 
+round-off errors from 
+different computation 
+orders. To turn them off, 
+set the environment variable 
+`TF_ENABLE_ONEDNN_OPTS=0`.
+WARNING: All log messages 
+before absl::InitializeLog() 
+is called are written to 
+STDERR
+I0000 
+00:00:1785060683.202905   
+12068 port.cc:153] oneDNN 
+custom operations are on. 
+You may see slightly 
+different numerical results 
+due to floating-point 
+round-off errors from 
+different computation 
+orders. To turn them off, 
+set the environment variable 
+`TF_ENABLE_ONEDNN_OPTS=0`.
+C:\Users\satish\miniconda3\Li
+b\site-packages\keras\src\lay
+ers\convolutional\base_conv.p
+y:113: UserWarning: Do not 
+pass an 
+`input_shape`/`input_dim` 
+argument to a layer. When 
+using Sequential models, 
+prefer using an 
+`Input(shape)` object as the 
+first layer in the model 
+instead.
+  super().__init__(activity_r
+egularizer=activity_regulariz
+er, **kwargs)
+I0000 
+00:00:1785060696.422752   
+12068 
+cpu_feature_guard.cc:227] 
+This TensorFlow binary is 
+optimized to use available 
+CPU instructions in 
+performance-critical 
+operations.
+To enable the following 
+instructions: SSE3 SSE4.1 
+SSE4.2 AVX AVX2 AVX512F 
+AVX512_VNNI FMA, in other 
+operations, rebuild 
+TensorFlow with the 
+appropriate compiler flags.
+Traceback (most recent call 
+last):
+  File "C:\Users\satish\Downl
+oads\Potato-Disease-Classific
+ation-using-CNN-main (1)\Pota
+to-Disease-Classification-usi
+ng-CNN-main\app.py", line 
+10, in <module>
+    model = tf.keras.models.l
+oad_model('model.h5')
+  File "C:\Users\satish\minic
+onda3\Lib\site-packages\keras
+\src\saving\saving_api.py", 
+line 197, in load_model
+    return legacy_h5_format.l
+oad_model_from_hdf5(
+           ~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~^
+        filepath,
+        ^^^^^^^^^
+    ...<2 lines>...
+        safe_mode=safe_mode,
+        ^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\satish\minic
+onda3\Lib\site-packages\keras
+\src\legacy\saving\legacy_h5_
+format.py", line 163, in 
+load_model_from_hdf5
+    **saving_utils.compile_ar
+gs_from_training_config(
+      ~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~^
+        training_config, 
+custom_objects
+        ^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\satish\minic
+onda3\Lib\site-packages\keras
+\src\legacy\saving\saving_uti
+ls.py", line 149, in compile_
+args_from_training_config
+    loss = _deserialize_neste
+d_config(losses.deserialize, 
+loss_config)
+  File "C:\Users\satish\minic
+onda3\Lib\site-packages\keras
+\src\legacy\saving\saving_uti
+ls.py", line 208, in 
+_deserialize_nested_config
+    return 
+deserialize_fn(config)
+  File "C:\Users\satish\minic
+onda3\Lib\site-packages\keras
+\src\losses\__init__.py", 
+line 155, in deserialize
+    return serialization_lib.
+deserialize_keras_object(
+           ~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~^
+        name,
+        ^^^^^
+        module_objects=ALL_OB
+JECTS_DICT,
+        ^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^
+        custom_objects=custom
+_objects,
+        ^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^
+    )
+    ^
+  File "C:\Users\satish\minic
+onda3\Lib\site-packages\keras
+\src\saving\serialization_lib
+.py", line 619, in 
+deserialize_keras_object
+    return 
+deserialize_keras_object(
+        
+serialize_with_public_class(
+    ...<2 lines>...
+        custom_objects=custom
+_objects,
+    )
+  File "C:\Users\satish\minic
+onda3\Lib\site-packages\keras
+\src\saving\serialization_lib
+.py", line 775, in 
+deserialize_keras_object
+    instance = 
+cls.from_config(inner_config)
+  File "C:\Users\satish\minic
+onda3\Lib\site-packages\keras
+\src\losses\losses.py", line 
+46, in from_config
+    return cls(**config)
+  File "C:\Users\satish\minic
+onda3\Lib\site-packages\keras
+\src\losses\losses.py", line 
+1251, in __init__
+    super().__init__(
+    ~~~~~~~~~~~~~~~~^
+        sparse_categorical_cr
+ossentropy,
+        ^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^
+    ...<5 lines>...
+        axis=axis,
+        ^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\satish\minic
+onda3\Lib\site-packages\keras
+\src\losses\losses.py", line 
+24, in __init__
+    
+super().__init__(name=name, 
+reduction=reduction, 
+dtype=dtype)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^
+  File "C:\Users\satish\minic
+onda3\Lib\site-packages\keras
+\src\losses\loss.py", line 
+48, in __init__
+    self.reduction = standard
+ize_reduction(reduction)
+                     ~~~~~~~~
+~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\satish\minic
+onda3\Lib\site-packages\keras
+\src\losses\loss.py", line 
+111, in standardize_reduction
+    raise ValueError(
+    ...<3 lines>...
+    )
+ValueError: Invalid value 
+for argument `reduction`. 
+Expected one of {None, 
+'sum', 
+'sum_over_batch_size', 
+'mean', 'none', 
+'mean_with_sample_weight'}. 
+Received: reduction=auto

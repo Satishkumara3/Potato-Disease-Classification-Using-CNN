@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Potato Disease AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --bg-gradient-1: #10B981;
+            --bg-gradient-2: #047857;
+            --bg-gradient-3: #064E3B;
+            --surface: rgba(255, 255, 255, 0.9);
+            --surface-glass: rgba(255, 255, 255, 0.7);
+            --text-main: #1F2937;
+            --text-secondary: #4B5563;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--bg-gradient-1), var(--bg-gradient-2), var(--bg-gradient-3));
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            padding: 2rem;
+            color: var(--text-main);
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 900px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin: 0 auto;
+        }
+        
+        @media (min-width: 768px) {
+            .app-container {
+                grid-template-columns: {% if image_path %} 1fr 1fr {% else %} 1fr {% endif %};
+                max-width: {% if image_path %} 900px {% else %} 500px {% endif %};
+            }
+        }
+
+        .glass-card {
+            background: var(--surface);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+
+        .header p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .upload-area {
+            position: relative;
+            border: 2px dashed #CBD5E1;
+            border-radius: 16px;
+            padding: 3rem 2rem;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.5);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .upload-area:hover, .upload-area.dragover {
+            border-color: var(--primary);
+            background: rgba(79, 70, 229, 0.05);
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .upload-area:hover .upload-icon {
+            transform: translateY(-5px);
+        }
+
+        .upload-text {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-hint {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        input[type="file"] {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .btn-predict {
+            width: 100%;
+            padding: 1rem;
+            margin-top: 1.5rem;
+            border: none;
+            border-radius: 12px;
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+            font-size: 1.125rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
+        }
+
+        .btn-predict:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.3);
+        }
+        
+        .btn-predict:disabled {
+            background: #9CA3AF;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .preview-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .image-preview {
+            width: 100%;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            background: #000;
+        }
+
+        .image-preview img {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: cover;
+        }
+
+        .result-card {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 1rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        .result-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+            margin-bottom: 0;
+        }
+
+        .result-label {
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .result-value {
+            font-weight: 700;
+            font-size: 1.125rem;
+            color: var(--text-main);
+        }
+
+        .confidence-bar {
+            height: 8px;
+            background: #E5E7EB;
+            border-radius: 4px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+        }
+        
+        .confidence-fill {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 4px;
+            transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .error-message {
+            background: #FEE2E2;
+            color: #DC2626;
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+        
+        .status-healthy { background: #D1FAE5; color: #065F46; }
+        .status-disease { background: #FEF2F2; color: #991B1B; }
+        
+        #file-name-display {
+            margin-top: 1rem;
+            font-weight: 500;
+            color: var(--primary);
+            text-align: center;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- Main Upload Card -->
+        <main class="glass-card">
+            <div class="header">
+                <h1><i class="fa-solid fa-leaf" style="color: var(--bg-gradient-1);"></i> PotatoCare AI</h1>
+                <p>Advanced CNN-based disease classification</p>
+            </div>
+
+            {% if message %}
+            <div class="error-message">
+                <i class="fa-solid fa-circle-exclamation"></i> {{ message }}
+            </div>
+            {% endif %}
+
+            <form action="/" method="post" enctype="multipart/form-data" id="upload-form">
+                <div class="upload-area" id="drop-zone">
+                    <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
+                    <div class="upload-text">Drag & drop a leaf image or click to browse</div>
+                    <div class="upload-hint">Supports JPG, JPEG, PNG (High resolution)</div>
+                    <input type="file" id="fileInput" name="file" accept=".jpg, .jpeg, .png" required>
+                </div>
+                
+                <div id="file-name-display">
+                    <i class="fa-solid fa-file-image"></i> <span id="file-name-text">No file selected</span>
+                </div>
+
+                <button type="submit" class="btn-predict" id="predict-btn" {% if not image_path %}disabled{% endif %}>
+                    <i class="fa-solid fa-microscope"></i> Analyze Leaf
+                </button>
+            </form>
+        </main>
+
+        <!-- Results Card (Only visible after upload) -->
+        {% if image_path %}
+        <aside class="glass-card preview-container">
+            <div class="image-preview">
+                <img src="{{ image_path }}" alt="Potato Leaf">
+            </div>
+            
+            <div class="result-card">
+                <div class="result-item">
+                    <span class="result-label">Diagnosis</span>
+                    {% set is_healthy = 'healthy' in predicted_label.lower() %}
+                    <span class="status-badge {{ 'status-healthy' if is_healthy else 'status-disease' }}">
+                        {{ predicted_label.replace('Potato___', '').replace('_', ' ') }}
+                    </span>
+                </div>
+                
+                <div class="result-item" style="flex-direction: column; align-items: stretch; border-bottom: none;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                        <span class="result-label">AI Confidence</span>
+                        <span class="result-value">{{ confidence }}%</span>
+                    </div>
+                    <div class="confidence-bar">
+                        <div class="confidence-fill" style="width: 0%" data-target="{{ confidence }}%"></div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+        {% endif %}
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const fileInput = document.getElementById('fileInput');
+            const dropZone = document.getElementById('drop-zone');
+            const fileNameDisplay = document.getElementById('file-name-display');
+            const fileNameText = document.getElementById('file-name-text');
+            const predictBtn = document.getElementById('predict-btn');
+            const form = document.getElementById('upload-form');
+
+            // Handle file selection
+            fileInput.addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    const fileName = e.target.files[0].name;
+                    fileNameText.textContent = fileName;
+                    fileNameDisplay.style.display = 'block';
+                    predictBtn.disabled = false;
+                } else {
+                    fileNameDisplay.style.display = 'none';
+                    predictBtn.disabled = true;
+                }
+            });
+
+            // Drag and drop stylings
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, preventDefaults, false);
+            });
+
+            function preventDefaults (e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropZone.addEventListener(eventName, () => {
+                    dropZone.classList.add('dragover');
+                }, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, () => {
+                    dropZone.classList.remove('dragover');
+                }, false);
+            });
+
+            dropZone.addEventListener('drop', (e) => {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                fileInput.files = files;
+                
+                // Trigger change event manually
+                const event = new Event('change');
+                fileInput.dispatchEvent(event);
+            });
+
+            // Form submission loading state
+            form.addEventListener('submit', () => {
+                if (fileInput.files.length > 0) {
+                    predictBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Analyzing...';
+                    predictBtn.style.opacity = '0.8';
+                    predictBtn.style.cursor = 'wait';
+                }
+            });
+
+            // Animate confidence bar
+            setTimeout(() => {
+                const fill = document.querySelector('.confidence-fill');
+                if (fill) {
+                    fill.style.width = fill.getAttribute('data-target');
+                }
+            }, 300);
+        });
+    </script>
+</body>
+</html>
