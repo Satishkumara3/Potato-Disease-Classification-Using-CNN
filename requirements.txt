@@ -1,6 +1,6 @@
 Flask
 tflite-runtime
-numpy
+numpy<2
 Werkzeug
 gunicorn
 Pillow
