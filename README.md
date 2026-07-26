@@ -2,6 +2,11 @@
 This project aims to classify diseases in potato plants using Convolutional Neural Networks (CNNs). The deep learning model is trained on a dataset of potato plant images to identify and categorize different diseases affecting the crops.
 
 
+## 🚀 Live Demo
+
+👉 https://potato-disease-classification-using-cnn-c5dk.onrender.com
+
+
 # Overview
 Potato cultivation is a crucial aspect of agriculture, and diseases can significantly impact crop yield. This project leverages deep learning techniques, specifically CNNs, to automate the process of identifying and classifying diseases in potato plants. The trained model can be used as a tool for early detection and intervention, helping farmers make informed decisions about crop management.
 
